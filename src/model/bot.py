@@ -11,6 +11,7 @@ import warnings
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List, Union
+import random
 
 import customtkinter
 import numpy as np
@@ -272,9 +273,9 @@ class Bot(ABC):
         """
         self.log_msg("Dropping items...")
         pag.keyDown("shift")
-        for i, slot in enumerate(self.win.inventory_slots):
-            if i not in slots:
-                continue
+        time.sleep(0.33)
+        for index in slots:
+            slot = self.win.inventory_slots[index]
             p = slot.random_point()
             self.mouse.move_to(
                 (p[0], p[1]),
@@ -284,8 +285,38 @@ class Bot(ABC):
                 offsetBoundaryX=40,
                 tween=pytweening.easeInOutQuad,
             )
+            time.sleep(0.22)
             pag.click()
+
+            if random.randint(0,2) == 1:
+                x, y = pag.position()
+                self.log_msg(f"random double click on the same spot happening")
+                self.mouse.move_to(
+                    (x + random.randint(-5,25), y + random.randint(0,11)),
+                    mouseSpeed="fastest",
+                    knotsCount=1,
+                    offsetBoundaryY=40,
+                    offsetBoundaryX=40,
+                    tween=pytweening.easeInOutQuad,
+                )
+
+        time.sleep(0.34)
         pag.keyUp("shift")
+
+        #for i, slot in enumerate(self.win.inventory_slots):
+            #if i not in slots:
+                #continue
+            #p = slot.random_point()
+            #self.mouse.move_to(
+                #(p[0], p[1]),
+                #mouseSpeed="fastest",
+                #knotsCount=1,
+                #offsetBoundaryY=40,
+                #offsetBoundaryX=40,
+                #tween=pytweening.easeInOutQuad,
+            #)
+            #pag.click()
+        #pag.keyUp("shift")
 
     def friends_nearby(self) -> bool:
         """

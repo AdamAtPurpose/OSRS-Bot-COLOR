@@ -60,3 +60,8 @@ OFF_YELLOW = Color([190, 190, 0], [255, 255, 120])
 """Colors for use with minimap orb text"""
 ORB_GREEN = Color([0, 255, 0], [255, 255, 0])
 ORB_RED = Color([255, 0, 0], [255, 255, 0])
+
+
+""" My custom colors"""
+
+FISHING_SPOT_CYAN = Color([20,0,0],[255,0,0])

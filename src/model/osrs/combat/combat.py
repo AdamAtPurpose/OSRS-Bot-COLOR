@@ -146,13 +146,16 @@ class OSRSCombat(OSRSBot, launcher.Launchable):
 
     def __loot(self, api: StatusSocket):
         """Picks up loot while there is loot on the ground"""
-        while self.pick_up_loot(self.loot_items):
+        count = 0
+        while self.pick_up_loot(self.loot_items) and count != 1:
+            count += 1
+            time.sleep(1)
             if api.get_is_inv_full():
                 self.__logout("Inventory full. Cannot loot.")
                 return
             curr_inv = len(api.get_inv())
             self.log_msg("Picking up loot...")
-            for _ in range(5):  # give the bot 5 seconds to pick up the loot
+            for _ in range(2):  # give the bot 5 seconds to pick up the loot
                 if len(api.get_inv()) != curr_inv:
                     self.log_msg("Loot picked up.")
                     time.sleep(1)
