@@ -5,12 +5,15 @@ import customtkinter
 from PIL import Image, ImageTk
 from pynput import keyboard
 
+import utilities.settings as settings
 from utilities.game_launcher import Launchable
 
 
 class InfoFrame(customtkinter.CTkFrame):
     listener = None
     pressed = False
+    current_keys = set()
+    combination_keys = settings.get("keybind") or settings.default_keybind
     status = "stopped"
 
     def __init__(self, parent, title, info):  # sourcery skip: merge-nested-ifs
@@ -92,22 +95,26 @@ class InfoFrame(customtkinter.CTkFrame):
 
         self.btn_play = customtkinter.CTkButton(
             master=self.btn_frame,
-            text="Play [Ctrl]",
+            text="Play",
             text_color="white",
             image=self.img_play,
             command=self.play_btn_clicked,
         )
+        self.btn_play.bind("<Enter>", lambda event: event.widget.configure(text=f"{settings.keybind_to_text(self.combination_keys)}"))
+        self.btn_play.bind("<Leave>", lambda event: event.widget.configure(text="Play"))
         self.btn_play.grid(row=1, column=0, pady=(0, 15), sticky="nsew")
 
         self.btn_stop = customtkinter.CTkButton(
             master=self.btn_frame,
-            text="Stop [Ctrl]",
+            text="Stop",
             text_color="white",
             fg_color="#910101",
             hover_color="#690101",
             image=self.img_stop,
             command=self.stop_btn_clicked,
         )
+        self.btn_stop.bind("<Enter>", lambda event: event.widget.configure(text=f"{settings.keybind_to_text(self.combination_keys)}"))
+        self.btn_stop.bind("<Leave>", lambda event: event.widget.configure(text="Stop"))
 
         self.btn_options = customtkinter.CTkButton(
             master=self.btn_frame,
@@ -189,17 +196,20 @@ class InfoFrame(customtkinter.CTkFrame):
         self.listener.stop()
 
     def __on_press(self, key):
-        if self.pressed:
-            return
-        if key == keyboard.Key.ctrl_l:
+        self.current_keys.add(key)
+        if all(k in self.current_keys for k in self.combination_keys) and not self.pressed:
+            self.pressed = True
             if self.status == "running":
                 self.controller.stop()
             elif self.status == "stopped":
                 self.controller.play()
-        self.pressed = True
+                self.pressed = False
+                self.current_keys.clear()
 
     def __on_release(self, key):
-        self.pressed = False
+        self.current_keys.discard(key)
+        if all(k not in self.current_keys for k in self.combination_keys):
+            self.pressed = False
 
     # ---- Status Handlers ----
     def update_status_running(self):
