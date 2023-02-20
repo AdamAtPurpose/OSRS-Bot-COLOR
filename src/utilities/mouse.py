@@ -116,7 +116,6 @@ class Mouse:
         self.click()
         return self.__is_red_click(rect)
 
-    def __is_red_click(self, rect: Rectangle) -> bool:
     def __rect_around_point(self, mouse_pos: Point, pad: int) -> Rectangle:
         """
         Returns a rectangle around a Point with some padding.
