@@ -322,12 +322,14 @@ class App(customtkinter.CTk):
 
 if __name__ == "__main__":
     from model.osrs.agile_alcher.main import AgileAsHeckBoii
+    from model.osrs.bank_stander.main import OSRSBankStander
     # To test a bot without the GUI, address the comments for each line below.
     # from model.<folder_bot_is_in> import <bot_class_name>  # Uncomment this line and replace <folder_bot_is_in> and <bot_class_name> accordingly to import your bot
-    app = App()  # Add the "test=True" argument to the App constructor call.
+    #app = App(test=True)  # Add the "test=True" argument to the App constructor call.
+    app = App()
     app.start()  # Comment out this line.
     # app.test(Bot())  # Uncomment this line and replace argument with your bot's instance.
-    #app.test(AgileAsHeckBoii())
+    #app.test(OSRSBankStander())
     # IMPORTANT
     # - Make sure your bot's options are pre-defined in its __init__ method.
     # - You can stop the bot by pressing `Left Ctrl`
